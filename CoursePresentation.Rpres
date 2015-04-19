@@ -1,0 +1,48 @@
+CoursePresentation
+========================================================
+author: Liangyi Hu 
+date: 04/18/2015
+
+Background
+========================================================
+
+* This presentation is used to demonstrate how people can use some specifications of a car to predict the expected miles per gallon of this car.
+
+* The underline method is basically to build a linear regression model from R data "mtcars".
+
+* the mtcars has 32 rows recorded some basic information from 32 car models, the features of cars including mpg, number of cylinders, displacement, hp, weight, transmission type etc...
+
+mtcars preview
+========================================================
+<small style="font-size:.5em">
+```{r,height=1}
+summary(mtcars[,c("mpg","cyl","disp","wt","am")])
+```
+</small>
+Plot some features
+========================================================
+Plot some features to show connections.
+```{r, echo=FALSE,}
+par(mfrow=c(2,2))
+plot(mtcars$cyl,mtcars$mpg)
+plot(mtcars$disp,mtcars$mpg)
+plot(mtcars$wt,mtcars$mpg)
+plot(mtcars$am,mtcars$mpg)
+```
+Analysis and UI design
+========================================================
+Following steps will help in deciding which method to use:
+
+<small style="font-size:.7em">
+1. Building different linear model fits using different subsets of features.
+
+2. Using anova function in R to analyze them, and get some useful features (this part is contained in course "regression models").
+
+3. Based on the result above we knew the mpg is highly depend on number of cylinders(cyl), displacement(disp), weight(wt). (for more information, refer to RMD file "AnalysisOnMtcars.Rmd" under the same github repository).
+
+4. We will include gear type to demonstrate how checkbox works.
+
+</small>
+To start, go to website: https://liangyihu.shinyapps.io/CourseProject/
+
+Enjoy!
