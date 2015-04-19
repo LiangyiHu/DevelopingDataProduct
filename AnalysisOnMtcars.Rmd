@@ -1,0 +1,101 @@
+---
+title: "Analysis on mpg in mtcars"
+output: word_document
+---
+
+##Summary
+This is an analysis on mtcars, main goal is to see the impact to mpg from transmission type (Auto vs Manual)
+
+##Exploratory
+Since mtcars is a widely used statistic sample data, we don't do much description here. First plot the data mpg vs am (0 is automatic). Black dots are automatic
+
+In figure 1 and Result 1, we can see manual cars have better performance than auto transmission cars (about 7 mpg better than auto), now let's see the confidence interval of the coefficients.
+
+From Result 2, It's almost sure manual outcomes auto in mpg (3.6~10.8 for 95% confidence interval!).
+
+##Doubt
+Another thing is: let's plot the residual in figure 2 in appendix.
+
+Seems not random distributed, which does not seem good...So let's add some more variables to it.
+
+##Add Additional regressors
+By intuition, we think Displacement, Number of Cylinders and Weight may have great effect to mpg. So we do 3 more regressions.
+
+Refer to Result 3 for the three more regressions.
+
+We could be able to see, as we increase the variable, the Pvalue for transmission type become very large, which means we could think transmission type has no effect on mpg!
+
+##Analyze these additional regressors
+Further more, we do anova on these fits, it's in Result 4
+
+By looking at P-value for these linear regressions, none of the P-value is greater than 0.05, which means we fail to reject there is no connection between mpg and these added variables.
+
+We plot the residual after adjustment of these variables, to see what it look like in figure 3.
+
+Looks fine now!
+
+Finally, we check the confidence interval for fit4 which considers all 4 variables, result is in Result 5 
+
+Cosiders the P-value for fit4 we've done before, we might think mpg is more related to Number of cylinders and weight of the car.
+
+##Conclusion
+Based on the analysis above, we could get the inference:
+
+* It's safe to reject the hypothesis that transmission type has impact on vehicles' mpg performance.
+* The reason at the beginning, manual transmission has better mpg than auto is because the manual cars listed in the data tend to have more cylinders and heavy weight.
+* Based on analysis, vehicles mpg may rely on other factors, such as Number of cylinders, displacement, weight, we don't do further analysis on this since it is out of interest.
+
+##Appendix
+Figure 1: initial plot
+```{r,fig.height=3,fig.width=3}
+library(ggplot2)
+ggplot(mtcars,aes(am,mpg))+geom_point(color=mtcars$am+1,size=4)
+```
+
+
+Result 1: coefficient of basic fit
+```{r}
+fit<-lm(mpg~am,data=mtcars)
+coef(fit)
+```
+
+
+Result 2: confidence interval of coefficient in basic fit
+```{r}
+confint(fit)
+```
+
+
+Figure 2: residual plot for basic fit
+```{r,fig.height=3,fig.width=5}
+qplot(mtcars$mpg,as.numeric(resid(fit)),color=mtcars$am,size=3)
+```
+
+
+Result 3: summary about coefficient for the three regressions.
+```{r}
+fit2<-lm(mpg~disp+am,data=mtcars)
+fit3<-lm(mpg~disp+cyl+am,data=mtcars)
+fit4<-lm(mpg~disp+cyl+wt+am,data=mtcars)
+summary(fit2)$coef
+summary(fit3)$coef
+summary(fit4)$coef
+```
+
+
+Result 4: anova analysis on all the four regressions.
+```{r}
+anova(fit, fit2, fit3,fit4)
+```
+
+
+Figure 3: residual plot on fit4
+```{r,fig.height=3,fig.width=5}
+qplot(mtcars$mpg,as.numeric(resid(fit4)),color=mtcars$am,size=3)
+```
+
+
+Result 5: confidence interval of coefficient for fit4
+```{r}
+confint(fit4)
+```
